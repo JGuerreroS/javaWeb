@@ -7,6 +7,14 @@
 <%@page import="java.sql.*"%>
 <%@page import="com.mysql.jdbc.Driver"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<%
+HttpSession sesion = request.getSession();
+if(sesion.getAttribute("login") == null || sesion.getAttribute("login").equals("0")) {
+    response.sendRedirect("login.jsp");
+}
+%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -19,9 +27,37 @@
 
         <div class="container mt-5">
 
-            <a href="index.jsp" class="btn btn-sm btn-secondary mb-3"> 
-                <i class="fa-solid fa-hand-point-left"></i> Volver
-            </a>
+           <nav class="navbar navbar-expand-lg bg-dark">
+                <div class="container-fluid">
+                    <a class="navbar-brand text-white" href="#">JavaWeb</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link active text-white" aria-current="page" href="index.jsp">Inicio</a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link active text-white" aria-current="page" href="crear.jsp">Registro</a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-secondary" href="usuario.jsp">
+                                    <i class="fa-regular fa-user"></i> <%=sesion.getAttribute("user")%>
+                                </a>
+                            </li>
+                            
+                        </ul>
+                        <form class="d-flex" action="logout.jsp">
+                            <button class="btn btn-outline-danger text-white" type="submit">Cerrar sesión</button>
+                        </form>
+                    </div>
+                </div>
+            </nav>
+
+            <br>
 
             <%
                 String id = request.getParameter("id");
@@ -58,7 +94,6 @@
                 try {
                     Connection conn = null;
                     Statement st = null;
-
                     Class.forName("com.mysql.jdbc.Driver");
                     conn = DriverManager.getConnection("jdbc:mysql://localhost/jsp?user=root&password=");
                     st = conn.createStatement();

@@ -8,11 +8,13 @@
 <%@page import="com.mysql.jdbc.Driver"%>
 
 <%
+    HttpSession sesion = request.getSession();
+    if (sesion.getAttribute("login") == null || sesion.getAttribute("login").equals("0")) {
+        response.sendRedirect("login.jsp");
+    }
     Connection conn = null;
     Statement st = null;
-    
     String id = request.getParameter("id");
-
     try {
         Class.forName("com.mysql.jdbc.Driver");
         conn = DriverManager.getConnection("jdbc:mysql://localhost/jsp?user=root&password=");
