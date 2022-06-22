@@ -4,11 +4,10 @@
     Author     : bdtej07524
 --%>
 
-<%@page import="java.math.BigInteger"%>
-<%@page import="java.security.MessageDigest"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.sql.*"%>
 <%@page import="com.mysql.jdbc.Driver"%>
+<%@page import="Utils.EncriptarMD5"%>
 <%
     HttpSession sesion = request.getSession();
     if (sesion.getAttribute("login") == null || sesion.getAttribute("login").equals("0")) {
@@ -16,6 +15,7 @@
     }
     Connection conn = null;
     Statement st = null;
+    EncriptarMD5 encry = new EncriptarMD5();
 %>
 <!DOCTYPE html>
 <html>
@@ -91,7 +91,7 @@
                     Class.forName("com.mysql.jdbc.Driver");
                     conn = DriverManager.getConnection("jdbc:mysql://localhost/jsp?user=root&password=");
                     st = conn.createStatement();
-                    st.executeUpdate("UPDATE usuarios SET user = '" + user + "', pass = '" + getMD5(pass1) + "', nombre = '" + nombres + "' WHERE id = '" + sesion.getAttribute("id") + "';");
+                    st.executeUpdate("UPDATE usuarios SET user = '" + user + "', pass = '" + encry.getMD5(pass1) + "', nombre = '" + nombres + "' WHERE id = '" + sesion.getAttribute("id") + "';");
                     sesion.setAttribute("user", user);
                     sesion.setAttribute("nombre", nombres);
                     response.sendRedirect("index.jsp");
@@ -104,21 +104,3 @@
         }
     %>
 </html>
-<%!
-    public String getMD5(String input) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.reset();
-            md.update(input.getBytes());
-            byte[] encBytes = md.digest();
-            BigInteger num = new BigInteger(1, encBytes);
-            String encString = num.toString(16);
-            while (encString.length() < 32) {
-                encString = "0" + encString;
-            }
-            return encString;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-%>

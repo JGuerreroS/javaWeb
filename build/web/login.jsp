@@ -4,8 +4,7 @@
     Author     : bdtej07524
 --%>
 
-<%@page import="java.math.BigInteger"%>
-<%@page import="java.security.MessageDigest"%>
+<%@page import="Utils.EncriptarMD5"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%@page import="java.sql.*"%>
@@ -37,6 +36,7 @@
                 Connection conn = null;
                 Statement st = null;
                 ResultSet rs = null;
+                EncriptarMD5 encry = new EncriptarMD5();
 
                 if (request.getParameter("login") != null) {
                     String user = request.getParameter("user");
@@ -46,7 +46,7 @@
                         Class.forName("com.mysql.jdbc.Driver");
                         conn = DriverManager.getConnection("jdbc:mysql://localhost/jsp?user=root&password=");
                         st = conn.createStatement();
-                        rs = st.executeQuery("SELECT * FROM usuarios WHERE user = '" + user + "' AND pass = '" + getMD5(pass) + "';");
+                        rs = st.executeQuery("SELECT * FROM usuarios WHERE user = '" + user + "' AND pass = '" + encry.getMD5(pass) + "';");
                         while (rs.next()) {
                             sesion.setAttribute("login", "1");
                             sesion.setAttribute("user", rs.getString("user"));
@@ -63,22 +63,3 @@
         </div>
     </body>
 </html>
-
-<%!
-    public String getMD5(String input) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.reset();
-            md.update(input.getBytes());
-            byte[] encBytes = md.digest();
-            BigInteger num = new BigInteger(1, encBytes);
-            String encString = num.toString(16);
-            while (encString.length() < 32) {
-                encString = "0" + encString;
-            }
-            return encString;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-%>

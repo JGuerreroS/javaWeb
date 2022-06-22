@@ -3,19 +3,12 @@
     Created on : 03-jun-2022, 9:43:09
     Author     : bdtej07524
 --%>
-
-<%@page import="java.sql.*"%>
-<%@page import="com.mysql.jdbc.Driver"%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     HttpSession sesion = request.getSession();
     if (sesion.getAttribute("login") == null || sesion.getAttribute("login").equals("0")) {
         response.sendRedirect("login.jsp");
     }
-    Connection conn = null;
-    Statement st = null;
-    ResultSet rs = null;
 %>
 <!DOCTYPE html>
 <html>
@@ -28,7 +21,6 @@
     </head>
     <body>
         <div class="container mt-5">
-
             <nav class="navbar navbar-expand-lg bg-dark">
                 <div class="container-fluid">
                     <a class="navbar-brand text-white" href="#">JavaWeb</a>
@@ -50,7 +42,6 @@
                                     <i class="fa-regular fa-user"></i> <%=sesion.getAttribute("user")%>
                                 </a>
                             </li>
-                            
                         </ul>
                         <form class="d-flex" action="logout.jsp">
                             <button class="btn btn-outline-danger text-white" type="submit">Cerrar sesión</button>
@@ -74,35 +65,7 @@
                     </tr>
                 </thead>
                 <tbody class="table-group-divider">
-                    <%
-                        try {
-                            Class.forName("com.mysql.jdbc.Driver");
-                            conn = DriverManager.getConnection("jdbc:mysql://localhost/jsp?user=root&password=");
-                            st = conn.createStatement();
-                            rs = st.executeQuery("SELECT * FROM test");
-                            while (rs.next()) {
-                    %>
-                    <tr>
-                        <th scope="row"> <%= rs.getString(1)%> </th>
-                        <td> <%= rs.getString(2)%> </td>
-                        <td> <%= rs.getString(3)%> </td>
-                        <td>
-                            <a class="btn btn-sm btn-secondary" href="editar.jsp?id=<%=rs.getString(1)%>&cedula=<%=rs.getString(2)%>&nombres=<%=rs.getString(3)%>" title="Editar">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </a>
-
-                            <a class="btn btn-sm btn-danger" href="borrar.jsp?id=<%=rs.getString(1)%>" title="Borrar">
-                                <i class="fa-solid fa-trash"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <%
-                            }
-                        } catch (Exception e) {
-                            out.print("Error: " + e);
-                        }
-                    %>
-
+                    <jsp:include page="Personas"/>
                 </tbody>
             </table>
         </div>
