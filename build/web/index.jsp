@@ -32,11 +32,11 @@
                             <li class="nav-item">
                                 <a class="nav-link active text-white" aria-current="page" href="index.jsp">Inicio</a>
                             </li>
-                            
+
                             <li class="nav-item">
                                 <a class="nav-link active text-white" aria-current="page" href="crear.jsp">Registro</a>
                             </li>
-                            
+
                             <li class="nav-item">
                                 <a class="nav-link text-secondary" href="usuario.jsp">
                                     <i class="fa-regular fa-user"></i> <%=sesion.getAttribute("user")%>
@@ -51,11 +51,22 @@
             </nav>
 
             <br>
-            
+
             <a href="crear.jsp" class="btn btn-sm btn-secondary">
                 Registrar persona <i class="fa-solid fa-user-plus"></i>
             </a>
-            <table class="table">
+
+            <form class="row g-3 mt-2" action="index.jsp" method="post">
+                <div class="col-auto">
+                    <label class="visually-hidden">Buscar personas</label>
+                    <input type="text" class="form-control" placeholder="Buscar" name="buscar">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary mb-3">Buscar</button>
+                </div>
+            </form>
+
+            <table class="table mt-3">
                 <thead>
                     <tr>
                         <th scope="col"> Nº </th>

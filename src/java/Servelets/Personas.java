@@ -23,21 +23,31 @@ public class Personas extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         try (PrintWriter out = response.getWriter()) {
 
             try {
+                String buscar = request.getParameter("buscar");
+                String sql = "SELECT * FROM clientes ";
+
+                if (buscar.length() !=0) {
+                    String where = "WHERE nombre LIKE '%" + buscar + "%'";
+                    sql += where;
+                }
+                
                 Class.forName("com.mysql.jdbc.Driver");
                 conn = DriverManager.getConnection("jdbc:mysql://localhost/jsp?user=root&password=");
                 st = conn.createStatement();
-                rs = st.executeQuery("SELECT * FROM test");
+                rs = st.executeQuery(sql);
+                
                 while (rs.next()) {
                     out.print("<tr>"
                             + "<th scope = \"row\">" + rs.getString(1) + "</th>"
                             + "<td>" + rs.getString(2) + "</td>"
                             + "<td>" + rs.getString(3) + "</td>"
                             + "<td>"
-                            + " <a class=\"btn btn-sm btn-danger\" href = \"borrar.jsp?id=" + rs.getString(1) + "\" title = \"Borrar\">"
-                            + "<i class=\"fa-solid fa-trash\"></i>"
+                            + " <a class=\"btn btn-sm btn-warning\" href = \"editar.jsp?id=" + rs.getString(1) + "\" title = \"Borrar\">"
+                            + "<i class=\"fa-regular fa-pen-to-square\"></i>"
                             + " </a>"
                             + " <a class=\"btn btn-sm btn-danger\" href=\"borrar.jsp?id=" + rs.getString(1) + "\" title=\"Borrar\">"
                             + "<i class=\"fa-solid fa-trash\"></i>"
